@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 
 st.set_page_config(page_title="나의 강점 찾기", page_icon="✨")
 
@@ -10,7 +10,7 @@ st.write("당신의 경험을 토대로 AI가 VIA 24강점 중 상위 5개 강�
 api_key = st.text_input("🔑 OpenAI API Key를 입력하세요.", type="password")
 
 if api_key:
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
 
     st.subheader("📘 질문에 답해주세요")
 
@@ -44,12 +44,12 @@ if api_key:
             """
 
             try:
-                response = openai.ChatCompletion.create(
+                response = client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[{"role": "user", "content": prompt}]
                 )
 
-                result = response["choices"][0]["message"]["content"]
+                result = response.choices[0].message.content
                 st.success("분석이 완료되었습니다!")
                 st.write(result)
 
